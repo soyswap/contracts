@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract SoyswapToken is ERC20, ERC20Permit, Pausable, AccessControl {
+contract SoyswapToken is ERC20, ERC20Permit, AccessControl {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -18,11 +18,13 @@ contract SoyswapToken is ERC20, ERC20Permit, Pausable, AccessControl {
     bytes32 public constant ROUTER_ROLE = keccak256("ROUTER_ROLE");
 
     uint256 private _maxSupply = 1000000 * 10**decimals(); // 1M tokens is maximum supply
+    uint256 private _initialSupply = 10000 * 10**decimals(); // 10,000 tokens is the initial supply
 
     event TokensRescued(address indexed sender, address indexed token, uint256 value);
 
     constructor() ERC20("Soyswap Token", "SOY") ERC20Permit("Soyswap Token") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _mint(_msgSender(), _initialSupply);
     }
 
     function _msgSender() internal view override returns (address) {
